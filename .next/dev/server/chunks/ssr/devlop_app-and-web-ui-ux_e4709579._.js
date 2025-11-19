@@ -965,6 +965,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$
 function JobsScreen() {
     const [sortBy, setSortBy] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('new');
     const [category, setCategory] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('all');
+    const [jobs, setJobs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const categories = [
         '전체',
         '개발',
@@ -972,6 +975,25 @@ function JobsScreen() {
         '기획',
         '마케팅'
     ];
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        const fetchJobs = async ()=>{
+            try {
+                setLoading(true);
+                const response = await fetch('/api/jobs');
+                if (!response.ok) {
+                    throw new Error('데이터를 가져오는데 실패했습니다.');
+                }
+                const data = await response.json();
+                setJobs(data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
+                console.error('Error fetching jobs:', err);
+            } finally{
+                setLoading(false);
+            }
+        };
+        fetchJobs();
+    }, []);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
         className: "px-4 py-6 space-y-6",
         children: [
@@ -982,7 +1004,7 @@ function JobsScreen() {
                         className: "absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 20,
+                        lineNumber: 44,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -990,7 +1012,7 @@ function JobsScreen() {
                         className: "pl-10 pr-12 h-12 rounded-xl"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 21,
+                        lineNumber: 45,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1001,18 +1023,18 @@ function JobsScreen() {
                             className: "h-5 w-5"
                         }, void 0, false, {
                             fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                            lineNumber: 30,
+                            lineNumber: 54,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 25,
+                        lineNumber: 49,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                lineNumber: 19,
+                lineNumber: 43,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1024,12 +1046,12 @@ function JobsScreen() {
                         children: cat
                     }, cat, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 37,
+                        lineNumber: 61,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                lineNumber: 35,
+                lineNumber: 59,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1042,7 +1064,7 @@ function JobsScreen() {
                         children: "신규순"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 50,
+                        lineNumber: 74,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1052,7 +1074,7 @@ function JobsScreen() {
                         children: "인기순"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 57,
+                        lineNumber: 81,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1062,103 +1084,75 @@ function JobsScreen() {
                         children: "마감임박"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 64,
+                        lineNumber: 88,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                lineNumber: 49,
+                lineNumber: 73,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "space-y-3",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                        job: {
-                            id: 1,
-                            data_sid: 'S001',
-                            title: '초등학교 교사 채용',
-                            school: '서울초등학교',
-                            regdate: new Date(),
-                            duedate: '2024-12-25',
-                            link: 'https://example.com/job/1'
-                        }
-                    }, void 0, false, {
-                        fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 75,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                        job: {
-                            id: 2,
-                            data_sid: 'S002',
-                            title: '중학교 수학 교사 채용',
-                            school: '서울중학교',
-                            regdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                            duedate: '2024-12-20',
-                            link: 'https://example.com/job/2'
-                        }
-                    }, void 0, false, {
-                        fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 87,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                        job: {
-                            id: 3,
-                            data_sid: 'S003',
-                            title: '고등학교 영어 교사 채용',
-                            school: '서울고등학교',
-                            regdate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-                            duedate: '2024-12-18',
-                            link: 'https://example.com/job/3'
-                        }
-                    }, void 0, false, {
-                        fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 99,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                        job: {
-                            id: 4,
-                            data_sid: 'S004',
-                            title: '초등학교 체육 교사 채용',
-                            school: '부산초등학교',
-                            regdate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-                            duedate: '2024-12-22',
-                            link: 'https://example.com/job/4'
-                        }
-                    }, void 0, false, {
-                        fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 111,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                        job: {
-                            id: 5,
-                            data_sid: 'S005',
-                            title: '중학교 과학 교사 채용',
-                            school: '인천중학교',
-                            regdate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
-                            duedate: '2024-12-30',
-                            link: 'https://example.com/job/5'
-                        }
-                    }, void 0, false, {
-                        fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                        lineNumber: 123,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
+            loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-center py-12",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    className: "text-muted-foreground",
+                    children: "데이터를 불러오는 중..."
+                }, void 0, false, {
+                    fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                    lineNumber: 100,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-                lineNumber: 74,
-                columnNumber: 7
+                lineNumber: 99,
+                columnNumber: 9
+            }, this) : error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-center py-12",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    className: "text-destructive",
+                    children: error
+                }, void 0, false, {
+                    fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                    lineNumber: 104,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                lineNumber: 103,
+                columnNumber: 9
+            }, this) : jobs.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-center py-12",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    className: "text-muted-foreground",
+                    children: "등록된 공고가 없습니다."
+                }, void 0, false, {
+                    fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                    lineNumber: 108,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                lineNumber: 107,
+                columnNumber: 9
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "space-y-3",
+                children: jobs.map((job)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
+                        job: job
+                    }, job.id, false, {
+                        fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                        lineNumber: 113,
+                        columnNumber: 13
+                    }, this))
+            }, void 0, false, {
+                fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
+                lineNumber: 111,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/devlop/app-and-web-ui-ux/components/jobs-screen.tsx",
-        lineNumber: 17,
+        lineNumber: 41,
         columnNumber: 5
     }, this);
 }
@@ -1812,6 +1806,29 @@ function HomeScreen() {
     }, this);
 }
 function HomeContent() {
+    const [featuredJobs, setFeaturedJobs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [totalJobs, setTotalJobs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        const fetchFeaturedJobs = async ()=>{
+            try {
+                setLoading(true);
+                const response = await fetch('/api/jobs');
+                if (!response.ok) {
+                    throw new Error('데이터를 가져오는데 실패했습니다.');
+                }
+                const data = await response.json();
+                setTotalJobs(data.length);
+                // 최신 3개만 가져오기
+                setFeaturedJobs(data.slice(0, 3));
+            } catch (err) {
+                console.error('Error fetching featured jobs:', err);
+            } finally{
+                setLoading(false);
+            }
+        };
+        fetchFeaturedJobs();
+    }, []);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
         className: "px-4 py-6 space-y-6",
         children: [
@@ -1823,21 +1840,25 @@ function HomeContent() {
                         children: "안녕하세요, 지수님"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 72,
+                        lineNumber: 98,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "text-muted-foreground",
-                        children: "오늘의 추천 공고가 3건 있어요"
-                    }, void 0, false, {
+                        children: [
+                            "오늘의 추천 공고가 ",
+                            totalJobs,
+                            "건 있어요"
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 73,
+                        lineNumber: 99,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                lineNumber: 71,
+                lineNumber: 97,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1847,21 +1868,21 @@ function HomeContent() {
                         className: "absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 78,
+                        lineNumber: 104,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                        placeholder: "직무, 회사명으로 검색...",
+                        placeholder: "직무, 학교명으로 검색...",
                         className: "pl-10 h-12 rounded-xl"
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 79,
+                        lineNumber: 105,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                lineNumber: 77,
+                lineNumber: 103,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1879,7 +1900,7 @@ function HomeContent() {
                                             className: "h-4 w-4 text-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                            lineNumber: 90,
+                                            lineNumber: 116,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1887,32 +1908,32 @@ function HomeContent() {
                                             children: "신규 공고"
                                         }, void 0, false, {
                                             fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                            lineNumber: 91,
+                                            lineNumber: 117,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                    lineNumber: 89,
+                                    lineNumber: 115,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-2xl font-bold",
-                                    children: "24"
+                                    children: totalJobs
                                 }, void 0, false, {
                                     fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                    lineNumber: 93,
+                                    lineNumber: 119,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                            lineNumber: 88,
+                            lineNumber: 114,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 87,
+                        lineNumber: 113,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -1927,46 +1948,46 @@ function HomeContent() {
                                             className: "h-4 w-4 text-accent-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                            lineNumber: 99,
+                                            lineNumber: 125,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             className: "text-sm font-medium",
-                                            children: "인기 공고"
+                                            children: "전체 공고"
                                         }, void 0, false, {
                                             fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                            lineNumber: 100,
+                                            lineNumber: 126,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                    lineNumber: 98,
+                                    lineNumber: 124,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-2xl font-bold",
-                                    children: "156"
+                                    children: totalJobs
                                 }, void 0, false, {
                                     fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                    lineNumber: 102,
+                                    lineNumber: 128,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                            lineNumber: 97,
+                            lineNumber: 123,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 96,
+                        lineNumber: 122,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                lineNumber: 86,
+                lineNumber: 112,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1980,7 +2001,7 @@ function HomeContent() {
                                 children: "오늘의 추천"
                             }, void 0, false, {
                                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 110,
+                                lineNumber: 136,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1989,58 +2010,61 @@ function HomeContent() {
                                 children: "전체보기"
                             }, void 0, false, {
                                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 111,
+                                lineNumber: 137,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 109,
+                        lineNumber: 135,
                         columnNumber: 9
                     }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "space-y-3",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                                job: {
-                                    id: 1,
-                                    data_sid: 'S001',
-                                    title: '초등학교 교사 채용',
-                                    school: '서울초등학교',
-                                    regdate: new Date(),
-                                    duedate: '2024-12-25',
-                                    link: 'https://example.com/job/1'
-                                }
-                            }, void 0, false, {
-                                fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 115,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
-                                job: {
-                                    id: 2,
-                                    data_sid: 'S002',
-                                    title: '중학교 수학 교사 채용',
-                                    school: '서울중학교',
-                                    regdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                                    duedate: '2024-12-20',
-                                    link: 'https://example.com/job/2'
-                                }
-                            }, void 0, false, {
-                                fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 127,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
+                    loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center justify-center py-8",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-muted-foreground",
+                            children: "데이터를 불러오는 중..."
+                        }, void 0, false, {
+                            fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
+                            lineNumber: 142,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 114,
-                        columnNumber: 9
+                        lineNumber: 141,
+                        columnNumber: 11
+                    }, this) : featuredJobs.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center justify-center py-8",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-muted-foreground",
+                            children: "등록된 공고가 없습니다."
+                        }, void 0, false, {
+                            fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
+                            lineNumber: 146,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
+                        lineNumber: 145,
+                        columnNumber: 11
+                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "space-y-3",
+                        children: featuredJobs.map((job)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$job$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobCard"], {
+                                job: job
+                            }, job.id, false, {
+                                fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
+                                lineNumber: 151,
+                                columnNumber: 15
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
+                        lineNumber: 149,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                lineNumber: 108,
+                lineNumber: 134,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -2054,7 +2078,7 @@ function HomeContent() {
                                 children: "추천 상품"
                             }, void 0, false, {
                                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 144,
+                                lineNumber: 160,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -2063,13 +2087,13 @@ function HomeContent() {
                                 children: "더보기"
                             }, void 0, false, {
                                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 145,
+                                lineNumber: 161,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 143,
+                        lineNumber: 159,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2083,7 +2107,7 @@ function HomeContent() {
                                 isNew: true
                             }, void 0, false, {
                                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 149,
+                                lineNumber: 165,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$devlop$2f$app$2d$and$2d$web$2d$ui$2d$ux$2f$components$2f$product$2d$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ProductCard"], {
@@ -2093,25 +2117,25 @@ function HomeContent() {
                                 image: "/lg-gram-laptop.jpg"
                             }, void 0, false, {
                                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                                lineNumber: 156,
+                                lineNumber: 172,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                        lineNumber: 148,
+                        lineNumber: 164,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-                lineNumber: 142,
+                lineNumber: 158,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/devlop/app-and-web-ui-ux/components/home-screen.tsx",
-        lineNumber: 69,
+        lineNumber: 95,
         columnNumber: 5
     }, this);
 }

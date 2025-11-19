@@ -1,17 +1,41 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { JobCard } from '@/components/job-card'
+import { JobCard, TeacherJob } from '@/components/job-card'
 import { Badge } from '@/components/ui/badge'
 
 export function JobsScreen() {
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'deadline'>('new')
   const [category, setCategory] = useState<string>('all')
+  const [jobs, setJobs] = useState<TeacherJob[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const categories = ['전체', '개발', '디자인', '기획', '마케팅']
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/jobs')
+        if (!response.ok) {
+          throw new Error('데이터를 가져오는데 실패했습니다.')
+        }
+        const data = await response.json()
+        setJobs(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.')
+        console.error('Error fetching jobs:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchJobs()
+  }, [])
   
   return (
     <main className="px-4 py-6 space-y-6">
@@ -71,67 +95,25 @@ export function JobsScreen() {
       </div>
 
       {/* Job List */}
-      <div className="space-y-3">
-        <JobCard 
-          job={{
-            id: 1,
-            data_sid: 'S001',
-            title: '초등학교 교사 채용',
-            school: '서울초등학교',
-            regdate: new Date(),
-            duedate: '2024-12-25',
-            link: 'https://example.com/job/1'
-          }}
-        />
-        
-        <JobCard 
-          job={{
-            id: 2,
-            data_sid: 'S002',
-            title: '중학교 수학 교사 채용',
-            school: '서울중학교',
-            regdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-            duedate: '2024-12-20',
-            link: 'https://example.com/job/2'
-          }}
-        />
-
-        <JobCard 
-          job={{
-            id: 3,
-            data_sid: 'S003',
-            title: '고등학교 영어 교사 채용',
-            school: '서울고등학교',
-            regdate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-            duedate: '2024-12-18',
-            link: 'https://example.com/job/3'
-          }}
-        />
-
-        <JobCard 
-          job={{
-            id: 4,
-            data_sid: 'S004',
-            title: '초등학교 체육 교사 채용',
-            school: '부산초등학교',
-            regdate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-            duedate: '2024-12-22',
-            link: 'https://example.com/job/4'
-          }}
-        />
-
-        <JobCard 
-          job={{
-            id: 5,
-            data_sid: 'S005',
-            title: '중학교 과학 교사 채용',
-            school: '인천중학교',
-            regdate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
-            duedate: '2024-12-30',
-            link: 'https://example.com/job/5'
-          }}
-        />
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-muted-foreground">데이터를 불러오는 중...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-destructive">{error}</p>
+        </div>
+      ) : jobs.length === 0 ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-muted-foreground">등록된 공고가 없습니다.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {jobs.map((job) => (
+            <JobCard key={job.id} job={job} />
+          ))}
+        </div>
+      )}
     </main>
   )
 }

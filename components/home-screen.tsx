@@ -2,7 +2,7 @@
 
 import { BottomNav } from '@/components/bottom-nav'
 import { FavoritesScreen } from '@/components/favorites-screen'
-import { JobCard } from '@/components/job-card'
+import { JobCard, TeacherJob } from '@/components/job-card'
 import { JobsScreen } from '@/components/jobs-screen'
 import { NotificationsScreen } from '@/components/notifications-screen'
 import { ProductCard } from '@/components/product-card'
@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Bell, Briefcase, Search, Sparkles, TrendingUp, User } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type Tab = 'home' | 'jobs' | 'products' | 'favorites' | 'notifications'
 
@@ -65,19 +65,45 @@ export function HomeScreen() {
 }
 
 function HomeContent() {
+  const [featuredJobs, setFeaturedJobs] = useState<TeacherJob[]>([])
+  const [loading, setLoading] = useState(true)
+  const [totalJobs, setTotalJobs] = useState(0)
+
+  useEffect(() => {
+    const fetchFeaturedJobs = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/jobs')
+        if (!response.ok) {
+          throw new Error('데이터를 가져오는데 실패했습니다.')
+        }
+        const data: TeacherJob[] = await response.json()
+        setTotalJobs(data.length)
+        // 최신 3개만 가져오기
+        setFeaturedJobs(data.slice(0, 3))
+      } catch (err) {
+        console.error('Error fetching featured jobs:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFeaturedJobs()
+  }, [])
+
   return (
     <main className="px-4 py-6 space-y-6">
       {/* Welcome Section */}
       <div className="space-y-2">
         <h1 className="text-2xl font-bold text-balance">안녕하세요, 지수님</h1>
-        <p className="text-muted-foreground">오늘의 추천 공고가 3건 있어요</p>
+        <p className="text-muted-foreground">오늘의 추천 공고가 {totalJobs}건 있어요</p>
       </div>
 
       {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input 
-          placeholder="직무, 회사명으로 검색..." 
+          placeholder="직무, 학교명으로 검색..." 
           className="pl-10 h-12 rounded-xl"
         />
       </div>
@@ -90,16 +116,16 @@ function HomeContent() {
               <Sparkles className="h-4 w-4 text-primary" />
               <span className="text-sm font-medium">신규 공고</span>
             </div>
-            <p className="text-2xl font-bold">24</p>
+            <p className="text-2xl font-bold">{totalJobs}</p>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="h-4 w-4 text-accent-foreground" />
-              <span className="text-sm font-medium">인기 공고</span>
+              <span className="text-sm font-medium">전체 공고</span>
             </div>
-            <p className="text-2xl font-bold">156</p>
+            <p className="text-2xl font-bold">{totalJobs}</p>
           </CardContent>
         </Card>
       </div>
@@ -111,31 +137,21 @@ function HomeContent() {
           <Button variant="ghost" size="sm">전체보기</Button>
         </div>
         
-        <div className="space-y-3">
-          <JobCard 
-            job={{
-              id: 1,
-              data_sid: 'S001',
-              title: '초등학교 교사 채용',
-              school: '서울초등학교',
-              regdate: new Date(),
-              duedate: '2024-12-25',
-              link: 'https://example.com/job/1'
-            }}
-          />
-          
-          <JobCard 
-            job={{
-              id: 2,
-              data_sid: 'S002',
-              title: '중학교 수학 교사 채용',
-              school: '서울중학교',
-              regdate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-              duedate: '2024-12-20',
-              link: 'https://example.com/job/2'
-            }}
-          />
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <p className="text-muted-foreground">데이터를 불러오는 중...</p>
+          </div>
+        ) : featuredJobs.length === 0 ? (
+          <div className="flex items-center justify-center py-8">
+            <p className="text-muted-foreground">등록된 공고가 없습니다.</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {featuredJobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Recommended Products Section */}
