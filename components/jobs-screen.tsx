@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Search, SlidersHorizontal } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { JobCard, TeacherJob } from '@/components/job-card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Search, SlidersHorizontal } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export function JobsScreen() {
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'deadline'>('new')
@@ -14,7 +14,7 @@ export function JobsScreen() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const categories = ['전체', '개발', '디자인', '기획', '마케팅']
+  const categories = ['전체', '정부 지원금 공고', '교사 채용 공고']
 
   useEffect(() => {
     const fetchJobs = async () => {
