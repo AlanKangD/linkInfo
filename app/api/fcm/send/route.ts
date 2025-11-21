@@ -12,8 +12,8 @@ interface SendRequest {
 
 export async function POST(request: NextRequest) {
   try {
-    const body: SendRequest = await request.json()
-    const { token, title, body, data = {} } = body
+    const requestBody: SendRequest = await request.json()
+    const { token, title, body: messageBody, data = {} } = requestBody
 
     // 입력 검증
     if (!token || (!Array.isArray(token) && typeof token !== 'string')) {
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!title || !body) {
+    if (!title || !messageBody) {
       return NextResponse.json(
         { success: false, error: '제목과 내용이 필요합니다.' },
         { status: 400 }
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
           const message = {
             notification: {
               title,
-              body,
+              body: messageBody,
             },
             data: {
               ...Object.fromEntries(
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
               `INSERT INTO push_notifications 
                (token_id, title, body, data, status, fcm_message_id, sent_at)
                VALUES (?, ?, ?, ?, 'sent', ?, NOW())`,
-              [tokenId, title, body, JSON.stringify(data), messageId]
+              [tokenId, title, messageBody, JSON.stringify(data), messageId]
             )
           } catch (historyError) {
             // push_notifications 테이블이 없어도 계속 진행
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
                 `INSERT INTO push_notifications 
                  (token_id, title, body, data, status, error_message, created_at)
                  VALUES (?, ?, ?, ?, 'failed', ?, NOW())`,
-                [tokenRows[0].id, title, body, JSON.stringify(data), errorMessage]
+                [tokenRows[0].id, title, messageBody, JSON.stringify(data), errorMessage]
               )
             }
           } catch (historyError) {
