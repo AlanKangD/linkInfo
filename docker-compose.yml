@@ -14,6 +14,13 @@ services:
       - DB_NAME=${DB_NAME:-private}
       - DB_USER=${DB_USER:-root}
       - DB_PASSWORD=${DB_PASSWORD:-rootpassword}
+      # Firebase Admin SDK 설정 (선택사항)
+      # 방법 1: 서비스 계정 키 파일 경로 사용
+      - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=${FIREBASE_SERVICE_ACCOUNT_KEY_PATH:-}
+      # 방법 2: 환경 변수로 직접 설정
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-}
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY:-}
+      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL:-}
     restart: unless-stopped
     networks:
       - app-network
