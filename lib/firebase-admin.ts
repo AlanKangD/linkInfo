@@ -1,6 +1,6 @@
 import { initializeApp, getApps, cert, App } from 'firebase-admin/app'
 import { getMessaging, Messaging } from 'firebase-admin/messaging'
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync, statSync } from 'fs'
 
 let messaging: Messaging | null = null
 
@@ -22,15 +22,34 @@ export function getFirebaseMessaging(): Messaging {
     // 방법 1: 서비스 계정 키 파일 경로 사용
     if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH) {
       try {
-        // Next.js 빌드 시 동적 require()가 작동하지 않으므로 fs.readFileSync 사용
         const filePath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH
+        
+        // 파일 존재 여부 확인
+        if (!existsSync(filePath)) {
+          throw new Error(
+            `Firebase 서비스 계정 키 파일이 존재하지 않습니다: ${filePath}\n` +
+            '파일 경로와 Docker 볼륨 마운트를 확인하세요.'
+          )
+        }
+
+        // 디렉토리가 아닌지 확인
+        const stats = statSync(filePath)
+        if (stats.isDirectory()) {
+          throw new Error(
+            `지정된 경로가 디렉토리입니다: ${filePath}\n` +
+            '파일 경로를 확인하세요.'
+          )
+        }
+
+        // Next.js 빌드 시 동적 require()가 작동하지 않으므로 fs.readFileSync 사용
         const fileContent = readFileSync(filePath, 'utf8')
         serviceAccount = JSON.parse(fileContent)
-      } catch (error) {
+      } catch (error: any) {
         console.error('Firebase 서비스 계정 키 파일을 읽을 수 없습니다:', error)
         throw new Error(
-          'Firebase 서비스 계정 키 파일을 찾을 수 없습니다. ' +
-          'FIREBASE_SERVICE_ACCOUNT_KEY_PATH 환경 변수를 확인하세요.'
+          error.message || 
+          'Firebase 서비스 계정 키 파일을 읽을 수 없습니다. ' +
+          'FIREBASE_SERVICE_ACCOUNT_KEY_PATH 환경 변수와 파일 경로를 확인하세요.'
         )
       }
     } else {
