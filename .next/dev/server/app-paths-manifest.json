@@ -1,5 +1,0 @@
-{
-  "/api/fcm/token/route": "app/api/fcm/token/route.js",
-  "/api/jobs/route": "app/api/jobs/route.js",
-  "/page": "app/page.js"
-}
