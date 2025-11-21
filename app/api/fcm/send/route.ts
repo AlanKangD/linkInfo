@@ -83,9 +83,12 @@ export async function POST(request: NextRequest) {
                VALUES (?, ?, ?, ?, 'sent', ?, NOW())`,
               [tokenId, title, messageBody, JSON.stringify(data), messageId]
             )
-          } catch (historyError) {
+          } catch (historyError: any) {
             // push_notifications 테이블이 없어도 계속 진행
-            console.warn('전송 이력 저장 실패 (테이블이 없을 수 있음):', historyError)
+            // 테이블이 없는 경우만 조용히 무시 (ER_NO_SUCH_TABLE 에러)
+            if (historyError?.code !== 'ER_NO_SUCH_TABLE') {
+              console.warn('전송 이력 저장 실패:', historyError)
+            }
           }
 
           // 토큰의 last_used_at 업데이트

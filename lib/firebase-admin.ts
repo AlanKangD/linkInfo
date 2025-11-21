@@ -20,24 +20,24 @@ export function getFirebaseMessaging(): Messaging {
     let serviceAccount: any
 
     // 방법 1: 서비스 계정 키 파일 경로 사용
-    if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH) {
+    // 환경 변수가 없으면 기본 경로 사용 (로컬 개발용)
+    const defaultPath = process.cwd() + '/config/firebase-service-account.json'
+    const filePath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH || defaultPath
+    
+    // 파일이 존재하면 파일에서 읽기
+    if (existsSync(filePath) && !statSync(filePath).isDirectory()) {
       try {
-        const filePath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH
-        
-        // 파일 존재 여부 확인
-        if (!existsSync(filePath)) {
-          throw new Error(
-            `Firebase 서비스 계정 키 파일이 존재하지 않습니다: ${filePath}\n` +
-            '파일 경로와 Docker 볼륨 마운트를 확인하세요.'
-          )
-        }
 
         // 디렉토리가 아닌지 확인
         const stats = statSync(filePath)
         if (stats.isDirectory()) {
           throw new Error(
             `지정된 경로가 디렉토리입니다: ${filePath}\n` +
-            '파일 경로를 확인하세요.'
+            '로컬에 파일이 없어서 Docker가 디렉토리를 생성했습니다.\n' +
+            '해결 방법:\n' +
+            '1. docker compose down\n' +
+            '2. 로컬에 config/firebase-service-account.json 파일 생성\n' +
+            '3. docker compose up -d'
           )
         }
 
