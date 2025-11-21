@@ -1,5 +1,6 @@
 import { initializeApp, getApps, cert, App } from 'firebase-admin/app'
 import { getMessaging, Messaging } from 'firebase-admin/messaging'
+import { readFileSync } from 'fs'
 
 let messaging: Messaging | null = null
 
@@ -21,7 +22,10 @@ export function getFirebaseMessaging(): Messaging {
     // 방법 1: 서비스 계정 키 파일 경로 사용
     if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH) {
       try {
-        serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH)
+        // Next.js 빌드 시 동적 require()가 작동하지 않으므로 fs.readFileSync 사용
+        const filePath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_PATH
+        const fileContent = readFileSync(filePath, 'utf8')
+        serviceAccount = JSON.parse(fileContent)
       } catch (error) {
         console.error('Firebase 서비스 계정 키 파일을 읽을 수 없습니다:', error)
         throw new Error(
