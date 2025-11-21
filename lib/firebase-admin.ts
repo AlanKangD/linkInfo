@@ -1,6 +1,6 @@
-import { initializeApp, getApps, cert, App } from 'firebase-admin/app'
+import { App, cert, getApps, initializeApp } from 'firebase-admin/app'
 import { getMessaging, Messaging } from 'firebase-admin/messaging'
-import { readFileSync, existsSync, statSync } from 'fs'
+import { existsSync, readFileSync, statSync } from 'fs'
 
 let messaging: Messaging | null = null
 

@@ -19,6 +19,10 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-rootpassword}
       # Firebase Admin SDK 설정 - JSON 파일 경로 사용 (권장)
       - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/app/config/firebase-service-account.json
+      # 신규 공고 알림 스케줄러 설정
+      - JOB_NOTIFICATION_CRON=${JOB_NOTIFICATION_CRON:-*/5 * * * *}
+      - JOB_NOTIFICATION_RUN_ON_START=${JOB_NOTIFICATION_RUN_ON_START:-true}
+      - JOB_NOTIFICATION_AUTH_TOKEN=${JOB_NOTIFICATION_AUTH_TOKEN:-}
     restart: unless-stopped
     networks:
       - app-network
