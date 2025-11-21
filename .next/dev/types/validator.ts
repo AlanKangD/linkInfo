@@ -56,6 +56,42 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../app/api/fcm/send/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/fcm/send">> = Specific
+  const handler = {} as typeof import("../../../app/api/fcm/send/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/api/fcm/token/[id]/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/fcm/token/[id]">> = Specific
+  const handler = {} as typeof import("../../../app/api/fcm/token/[id]/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/api/fcm/token/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/fcm/token">> = Specific
+  const handler = {} as typeof import("../../../app/api/fcm/token/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/api/fcm/tokens/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/fcm/tokens">> = Specific
+  const handler = {} as typeof import("../../../app/api/fcm/tokens/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/api/jobs/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/jobs">> = Specific
