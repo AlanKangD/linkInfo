@@ -103,7 +103,7 @@ function HomeContent() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input 
-          placeholder="직무, 학교명으로 검색..." 
+          placeholder="공고 명으로 검색.." 
           className="pl-10 h-12 rounded-xl"
         />
       </div>

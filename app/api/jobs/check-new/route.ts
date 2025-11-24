@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { checkAndNotifyNewJobs } from '@/lib/job-notification'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * 신규 공고 확인 및 알림 전송 API

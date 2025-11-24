@@ -1,6 +1,6 @@
 import pool from '@/lib/db'
-import { RowDataPacket, ResultSetHeader } from 'mysql2'
 import { getFirebaseMessaging } from '@/lib/firebase-admin'
+import { ResultSetHeader, RowDataPacket } from 'mysql2'
 
 interface NewJob {
   id: number
