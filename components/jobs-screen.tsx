@@ -3,9 +3,33 @@
 import { JobCard, TeacherJob } from '@/components/job-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Separator } from '@/components/ui/separator'
+import { ArrowDownUp, Filter, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+
+interface FilterState {
+  regdateStart: string
+  regdateEnd: string
+  duedateStart: string
+  duedateEnd: string
+  schoolFilter: string
+}
 
 export function JobsScreen() {
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'deadline'>('new')
@@ -15,6 +39,15 @@ export function JobsScreen() {
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [isSortOpen, setIsSortOpen] = useState(false)
+  const [filters, setFilters] = useState<FilterState>({
+    regdateStart: '',
+    regdateEnd: '',
+    duedateStart: '',
+    duedateEnd: '',
+    schoolFilter: '',
+  })
 
   const categories = ['전체', '정부 지원금 공고', '교사 채용 공고']
 
@@ -48,6 +81,17 @@ export function JobsScreen() {
     fetchJobs()
   }, [])
 
+  // 적용된 필터 개수 계산
+  const activeFilterCount = useMemo(() => {
+    let count = 0
+    if (filters.regdateStart) count++
+    if (filters.regdateEnd) count++
+    if (filters.duedateStart) count++
+    if (filters.duedateEnd) count++
+    if (filters.schoolFilter.trim()) count++
+    return count
+  }, [filters])
+
   // 검색 및 필터링된 jobs
   const filteredJobs = useMemo(() => {
     let result = [...jobs]
@@ -58,6 +102,58 @@ export function JobsScreen() {
       result = result.filter((job) =>
         job.title?.toLowerCase().includes(query) ||
         job.school?.toLowerCase().includes(query)
+      )
+    }
+
+    // 등록일 필터링
+    if (filters.regdateStart) {
+      const startDate = new Date(filters.regdateStart)
+      startDate.setHours(0, 0, 0, 0)
+      result = result.filter((job) => {
+        if (!job.regdate) return false
+        const jobDate = new Date(job.regdate)
+        jobDate.setHours(0, 0, 0, 0)
+        return jobDate >= startDate
+      })
+    }
+    if (filters.regdateEnd) {
+      const endDate = new Date(filters.regdateEnd)
+      endDate.setHours(23, 59, 59, 999)
+      result = result.filter((job) => {
+        if (!job.regdate) return false
+        const jobDate = new Date(job.regdate)
+        jobDate.setHours(0, 0, 0, 0)
+        return jobDate <= endDate
+      })
+    }
+
+    // 마감일 필터링
+    if (filters.duedateStart) {
+      const startDate = new Date(filters.duedateStart)
+      startDate.setHours(0, 0, 0, 0)
+      result = result.filter((job) => {
+        if (!job.duedate) return false
+        const jobDate = new Date(job.duedate)
+        jobDate.setHours(0, 0, 0, 0)
+        return jobDate >= startDate
+      })
+    }
+    if (filters.duedateEnd) {
+      const endDate = new Date(filters.duedateEnd)
+      endDate.setHours(23, 59, 59, 999)
+      result = result.filter((job) => {
+        if (!job.duedate) return false
+        const jobDate = new Date(job.duedate)
+        jobDate.setHours(0, 0, 0, 0)
+        return jobDate <= endDate
+      })
+    }
+
+    // 학교명 필터링
+    if (filters.schoolFilter.trim()) {
+      const schoolQuery = filters.schoolFilter.trim().toLowerCase()
+      result = result.filter((job) =>
+        job.school?.toLowerCase().includes(schoolQuery)
       )
     }
 
@@ -88,7 +184,7 @@ export function JobsScreen() {
     }
 
     return result
-  }, [jobs, debouncedSearchQuery, category, sortBy])
+  }, [jobs, debouncedSearchQuery, category, sortBy, filters])
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -100,6 +196,24 @@ export function JobsScreen() {
     setSearchQuery('')
     setDebouncedSearchQuery('')
   }
+
+  const handleFilterChange = (key: keyof FilterState, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleResetFilters = () => {
+    setFilters({
+      regdateStart: '',
+      regdateEnd: '',
+      duedateStart: '',
+      duedateEnd: '',
+      schoolFilter: '',
+    })
+  }
+
+  const handleApplyFilters = () => {
+    setIsFilterOpen(false)
+  }
   
   return (
     <main className="px-4 py-6 space-y-6">
@@ -108,7 +222,7 @@ export function JobsScreen() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input 
           placeholder="공고 명 또는 학교명으로 검색..." 
-          className="pl-10 pr-20 h-12 rounded-xl"
+          className={`pl-10 ${searchQuery ? 'pr-28' : 'pr-20'} h-12 rounded-xl`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleSearchKeyDown}
@@ -117,20 +231,185 @@ export function JobsScreen() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-10 top-1/2 -translate-y-1/2 h-8 w-8"
+            className="absolute right-20 top-1/2 -translate-y-1/2 h-8 w-8"
             onClick={handleClearSearch}
           >
             <X className="h-4 w-4" />
           </Button>
         )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="absolute right-1 top-1/2 -translate-y-1/2"
-          title="고급 필터"
-        >
-          <SlidersHorizontal className="h-5 w-5" />
-        </Button>
+        
+        {/* 정렬 Popover */}
+        <Popover open={isSortOpen} onOpenChange={setIsSortOpen}>
+          <PopoverTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-10 top-1/2 -translate-y-1/2"
+              title="정렬"
+            >
+              <ArrowDownUp className="h-5 w-5" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-48 p-2" align="end">
+            <div className="space-y-1">
+              <Button
+                variant={sortBy === 'new' ? 'default' : 'ghost'}
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => {
+                  setSortBy('new')
+                  setIsSortOpen(false)
+                }}
+              >
+                신규순
+              </Button>
+              <Button
+                variant={sortBy === 'popular' ? 'default' : 'ghost'}
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => {
+                  setSortBy('popular')
+                  setIsSortOpen(false)
+                }}
+              >
+                인기순
+              </Button>
+              <Button
+                variant={sortBy === 'deadline' ? 'default' : 'ghost'}
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => {
+                  setSortBy('deadline')
+                  setIsSortOpen(false)
+                }}
+              >
+                마감임박
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 필터 Dialog */}
+        <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-1 top-1/2 -translate-y-1/2 relative"
+              title="고급 필터"
+            >
+              <SlidersHorizontal className="h-5 w-5" />
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              )}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>필터</DialogTitle>
+              <DialogDescription>
+                원하는 조건을 선택하여 공고를 필터링하세요.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6 py-4">
+              {/* 등록일 필터 */}
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">등록일</Label>
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="regdate-start" className="text-sm">
+                      시작일
+                    </Label>
+                    <Input
+                      id="regdate-start"
+                      type="date"
+                      value={filters.regdateStart}
+                      onChange={(e) => handleFilterChange('regdateStart', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="regdate-end" className="text-sm">
+                      종료일
+                    </Label>
+                    <Input
+                      id="regdate-end"
+                      type="date"
+                      value={filters.regdateEnd}
+                      onChange={(e) => handleFilterChange('regdateEnd', e.target.value)}
+                      min={filters.regdateStart || undefined}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* 마감일 필터 */}
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">마감일</Label>
+                <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="duedate-start" className="text-sm">
+                      시작일
+                    </Label>
+                    <Input
+                      id="duedate-start"
+                      type="date"
+                      value={filters.duedateStart}
+                      onChange={(e) => handleFilterChange('duedateStart', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="duedate-end" className="text-sm">
+                      종료일
+                    </Label>
+                    <Input
+                      id="duedate-end"
+                      type="date"
+                      value={filters.duedateEnd}
+                      onChange={(e) => handleFilterChange('duedateEnd', e.target.value)}
+                      min={filters.duedateStart || undefined}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* 학교명 필터 */}
+              <div className="space-y-3">
+                <Label htmlFor="school-filter" className="text-base font-semibold">
+                  학교명
+                </Label>
+                <Input
+                  id="school-filter"
+                  placeholder="학교명으로 필터링..."
+                  value={filters.schoolFilter}
+                  onChange={(e) => handleFilterChange('schoolFilter', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="flex-row gap-2 sm:gap-0">
+              <Button
+                variant="outline"
+                onClick={handleResetFilters}
+                className="flex-1 sm:flex-initial"
+              >
+                초기화
+              </Button>
+              <Button
+                onClick={handleApplyFilters}
+                className="flex-1 sm:flex-initial"
+              >
+                적용 ({activeFilterCount})
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Category Filter */}
@@ -147,35 +426,19 @@ export function JobsScreen() {
         ))}
       </div>
 
-      {/* Sort Filter */}
-      <div className="flex gap-2">
-        <Button
-          variant={sortBy === 'new' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSortBy('new')}
-        >
-          신규순
-        </Button>
-        <Button
-          variant={sortBy === 'popular' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSortBy('popular')}
-        >
-          인기순
-        </Button>
-        <Button
-          variant={sortBy === 'deadline' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSortBy('deadline')}
-        >
-          마감임박
-        </Button>
-      </div>
-
       {/* 검색 결과 정보 */}
-      {!loading && !error && debouncedSearchQuery.trim() && (
-        <div className="text-sm text-muted-foreground">
-          '{debouncedSearchQuery}' 검색 결과: {filteredJobs.length}개
+      {!loading && !error && (debouncedSearchQuery.trim() || activeFilterCount > 0) && (
+        <div className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
+          {debouncedSearchQuery.trim() && (
+            <span>'{debouncedSearchQuery}' 검색 결과</span>
+          )}
+          {activeFilterCount > 0 && (
+            <span className="flex items-center gap-1">
+              <Filter className="h-3.5 w-3.5" />
+              필터 {activeFilterCount}개 적용
+            </span>
+          )}
+          <span className="font-medium">총 {filteredJobs.length}개</span>
         </div>
       )}
 
