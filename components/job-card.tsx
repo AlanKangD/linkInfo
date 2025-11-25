@@ -5,11 +5,14 @@ import { format } from 'date-fns'
 import { ko } from 'date-fns/locale/ko'
 import { Calendar, Clock, ExternalLink, Heart, School } from 'lucide-react'
 
+export type JobType = 'g' | 't'
+
 export interface TeacherJob {
   id: number
   data_sid: string
   title: string
   school: string
+  job_type: JobType
   regdate: string | Date | null
   duedate: string | null
   link: string | null

@@ -51,6 +51,14 @@ export function JobsScreen() {
 
   const categories = ['전체', '정부 지원금 공고', '교사 채용 공고']
 
+  // 카테고리를 job_type으로 변환
+  const getJobTypeFromCategory = (cat: string): string | null => {
+    if (cat === 'all') return null
+    if (cat === '정부 지원금 공고') return 'g'
+    if (cat === '교사 채용 공고') return 't'
+    return null
+  }
+
   // 검색어 debounce (300ms)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,7 +72,13 @@ export function JobsScreen() {
     const fetchJobs = async () => {
       try {
         setLoading(true)
-        const response = await fetch('/api/jobs')
+        // 카테고리에 따른 job_type 필터 추가
+        const jobType = getJobTypeFromCategory(category)
+        const url = jobType 
+          ? `/api/jobs?job_type=${jobType}`
+          : '/api/jobs'
+        
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error('데이터를 가져오는데 실패했습니다.')
         }
@@ -79,7 +93,7 @@ export function JobsScreen() {
     }
 
     fetchJobs()
-  }, [])
+  }, [category])
 
   // 적용된 필터 개수 계산
   const activeFilterCount = useMemo(() => {
@@ -157,10 +171,8 @@ export function JobsScreen() {
       )
     }
 
-    // 카테고리 필터링 (현재는 전체만 있으므로 나중에 확장 가능)
-    if (category !== 'all') {
-      // TODO: 카테고리 필터링 로직 추가
-    }
+    // 카테고리 필터링은 API 레벨에서 처리되므로 여기서는 불필요
+    // (이미 category 변경 시 API를 다시 호출함)
 
     // 정렬
     switch (sortBy) {
@@ -418,16 +430,19 @@ export function JobsScreen() {
 
       {/* Category Filter */}
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {categories.map((cat) => (
-          <Badge
-            key={cat}
-            variant={category === cat.toLowerCase() ? 'default' : 'outline'}
-            className="px-4 py-2 cursor-pointer whitespace-nowrap"
-            onClick={() => setCategory(cat.toLowerCase())}
-          >
-            {cat}
-          </Badge>
-        ))}
+        {categories.map((cat) => {
+          const categoryValue = cat === '전체' ? 'all' : cat
+          return (
+            <Badge
+              key={cat}
+              variant={category === categoryValue ? 'default' : 'outline'}
+              className="px-4 py-2 cursor-pointer whitespace-nowrap"
+              onClick={() => setCategory(categoryValue)}
+            >
+              {cat}
+            </Badge>
+          )
+        })}
       </div>
 
       {/* 검색 결과 정보 */}
