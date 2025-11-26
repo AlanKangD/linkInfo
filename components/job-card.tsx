@@ -68,9 +68,13 @@ export function JobCard({
     try {
       const regDate = typeof job.regdate === 'string' ? new Date(job.regdate) : job.regdate
       const today = new Date()
-      const diffTime = today.getTime() - regDate.getTime()
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      return diffDays <= 7
+      
+      // 날짜만 비교 (시간 제외)
+      regDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
+      
+      // 오늘 등록된 공고만 신규로 표시
+      return regDate.getTime() === today.getTime()
     } catch {
       return false
     }
