@@ -24,12 +24,14 @@ interface JobCardProps {
   job: TeacherJob
   isFavorited?: boolean
   onFavoriteToggle?: (jobId: number) => void
+  className?: string
 }
 
 export function JobCard({
   job,
   isFavorited,
   onFavoriteToggle,
+  className,
 }: JobCardProps) {
   const formatDate = (date: string | Date | null): string => {
     if (!date) return '-'
@@ -88,7 +90,7 @@ export function JobCard({
 
   return (
     <Card 
-      className={`hover:shadow-md transition-shadow ${job.link ? 'cursor-pointer' : ''}`}
+      className={`hover:shadow-md transition-shadow ${job.link ? 'cursor-pointer' : ''} ${className || ''}`}
       onClick={handleCardClick}
     >
       <CardContent className="p-4 space-y-3">

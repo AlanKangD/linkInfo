@@ -10,18 +10,63 @@ import { ProductsScreen } from '@/components/products-screen'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Bell, Briefcase, Search, Sparkles, TrendingUp, User } from 'lucide-react'
+import { getNavigationAction } from '@/lib/notification-navigation'
+import { Briefcase, Search, Sparkles, TrendingUp, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type Tab = 'home' | 'jobs' | 'products' | 'favorites' | 'notifications'
 
 export function HomeScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('jobs')
+  const [notificationAction, setNotificationAction] = useState<{
+    action?: 'scrollToJob' | 'openExternal' | 'showNotification'
+    params?: Record<string, any>
+  } | null>(null)
+
+  // 알림 클릭 이벤트 리스너
+  useEffect(() => {
+    const handleNotificationClick = (event: CustomEvent) => {
+      const { type, job_id, url, data_sid, fullData } = event.detail
+
+      console.log('Notification click event received:', event.detail)
+
+      // 네비게이션 액션 결정
+      const navAction = getNavigationAction(fullData || { type, job_id, url, data_sid })
+
+      // 탭 전환
+      setActiveTab(navAction.tab)
+
+      // 액션 저장 (JobsScreen에서 사용)
+      if (navAction.action) {
+        setNotificationAction({
+          action: navAction.action,
+          params: navAction.params,
+        })
+
+        // 외부 링크인 경우 즉시 열기
+        if (navAction.action === 'openExternal' && navAction.params?.url) {
+          window.open(navAction.params.url, '_blank', 'noopener,noreferrer')
+          setNotificationAction(null)
+        }
+      }
+    }
+
+    window.addEventListener('notificationClick', handleNotificationClick as EventListener)
+
+    return () => {
+      window.removeEventListener('notificationClick', handleNotificationClick as EventListener)
+    }
+  }, [])
 
   const renderContent = () => {
     switch (activeTab) {
       case 'jobs':
-        return <JobsScreen />
+        return (
+          <JobsScreen
+            notificationAction={notificationAction}
+            onNotificationActionHandled={() => setNotificationAction(null)}
+          />
+        )
       case 'products':
         return <ProductsScreen />
       case 'favorites':
@@ -45,10 +90,6 @@ export function HomeScreen() {
             <span className="font-semibold text-lg">공고공구</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-1 right-1 h-2 w-2 bg-destructive rounded-full" />
-            </Button>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>

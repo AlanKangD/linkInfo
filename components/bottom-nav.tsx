@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Bell, Briefcase, Heart, ShoppingBag } from 'lucide-react'
+import { Briefcase, ShoppingBag } from 'lucide-react'
 
 type Tab = 'home' | 'jobs' | 'products' | 'favorites' | 'notifications'
 
@@ -14,9 +14,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const tabs = [
     // { id: 'home' as Tab, label: '홈', icon: Home },
     { id: 'jobs' as Tab, label: '공고', icon: Briefcase },
-    { id: 'products' as Tab, label: '상품', icon: ShoppingBag },
-    { id: 'favorites' as Tab, label: '즐겨찾기', icon: Heart },
-    { id: 'notifications' as Tab, label: '알림', icon: Bell },
+    { id: 'products' as Tab, label: '공구', icon: ShoppingBag },
   ]
 
   return (

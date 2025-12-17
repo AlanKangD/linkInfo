@@ -1,27 +1,28 @@
 'use client'
 
 import { JobCard, TeacherJob } from '@/components/job-card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { ArrowDownUp, Filter, Search, SlidersHorizontal, X } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface FilterState {
   regdateStart: string
@@ -31,7 +32,15 @@ interface FilterState {
   schoolFilter: string
 }
 
-export function JobsScreen() {
+interface JobsScreenProps {
+  notificationAction?: {
+    action?: 'scrollToJob' | 'openExternal' | 'showNotification'
+    params?: Record<string, any>
+  } | null
+  onNotificationActionHandled?: () => void
+}
+
+export function JobsScreen({ notificationAction, onNotificationActionHandled }: JobsScreenProps = {}) {
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'deadline'>('new')
   const [category, setCategory] = useState<string>('all')
   const [jobs, setJobs] = useState<TeacherJob[]>([])
@@ -48,8 +57,61 @@ export function JobsScreen() {
     duedateEnd: '',
     schoolFilter: '',
   })
+  const [highlightedJobId, setHighlightedJobId] = useState<number | null>(null)
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(null)
+  const jobRefs = useRef<Map<number, HTMLDivElement>>(new Map())
 
   const categories = ['전체', '정부 지원금 공고', '교사 채용 공고']
+
+  // 알림 액션 처리
+  useEffect(() => {
+    if (!notificationAction || !notificationAction.action) return
+
+    if (notificationAction.action === 'scrollToJob') {
+      const { jobId, dataSid } = notificationAction.params || {}
+      let targetJob: TeacherJob | undefined = undefined
+
+      // jobId로 공고 찾기
+      if (jobId) {
+        const jobIdNum = typeof jobId === 'string' ? parseInt(jobId, 10) : jobId
+        targetJob = jobs.find((j) => j.id === jobIdNum)
+      } else if (dataSid) {
+        // dataSid로 공고 찾기
+        targetJob = jobs.find((j) => j.data_sid === dataSid)
+      }
+
+      if (targetJob) {
+        // 공고 하이라이트 및 스크롤
+        setHighlightedJobId(targetJob.id)
+        setNotificationMessage(null) // 메시지 제거
+        setTimeout(() => {
+          const element = jobRefs.current.get(targetJob!.id)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            // 3초 후 하이라이트 제거
+            setTimeout(() => setHighlightedJobId(null), 3000)
+          }
+        }, 100)
+      } else {
+        // 공고를 찾지 못한 경우 메시지 표시
+        const searchCriteria = jobId ? `ID: ${jobId}` : dataSid ? `번호: ${dataSid}` : ''
+        setNotificationMessage(
+          `알림에서 참조한 공고를 찾을 수 없습니다. ${searchCriteria ? `(${searchCriteria})` : ''} 공고가 삭제되었거나 목록에 없을 수 있습니다.`
+        )
+        // 5초 후 메시지 자동 제거
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      }
+
+      // 액션 처리 완료 알림
+      if (onNotificationActionHandled) {
+        setTimeout(() => {
+          onNotificationActionHandled()
+        }, 500)
+      }
+    }
+  }, [notificationAction, jobs, onNotificationActionHandled])
 
   // 카테고리를 job_type으로 변환
   const getJobTypeFromCategory = (cat: string): string | null => {
@@ -445,6 +507,15 @@ export function JobsScreen() {
         })}
       </div>
 
+      {/* 알림 메시지 */}
+      {notificationMessage && (
+        <Alert variant="default" className="bg-yellow-50 border-yellow-200">
+          <AlertDescription className="text-yellow-800">
+            {notificationMessage}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* 검색 결과 정보 */}
       {!loading && !error && (debouncedSearchQuery.trim() || activeFilterCount > 0) && (
         <div className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
@@ -481,7 +552,26 @@ export function JobsScreen() {
       ) : (
         <div className="space-y-3">
           {filteredJobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <div
+              key={job.id}
+              ref={(el) => {
+                if (el) {
+                  jobRefs.current.set(job.id, el)
+                } else {
+                  jobRefs.current.delete(job.id)
+                }
+              }}
+              className={highlightedJobId === job.id ? 'animate-pulse' : ''}
+            >
+              <JobCard
+                job={job}
+                className={
+                  highlightedJobId === job.id
+                    ? 'ring-2 ring-primary ring-offset-2 transition-all'
+                    : ''
+                }
+              />
+            </div>
           ))}
         </div>
       )}
