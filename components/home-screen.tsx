@@ -86,7 +86,7 @@ export function HomeScreen() {
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center overflow-hidden border border-gray-200">
               <img 
-                src="/logo.png" 
+                src="/image1.png" 
                 alt="공고공구 로고" 
                 className="h-full w-full object-contain bg-white"
                 style={{ backgroundColor: '#ffffff' }}
