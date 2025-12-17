@@ -50,6 +50,7 @@ export function JobsScreen({ notificationAction, onNotificationActionHandled }: 
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [filters, setFilters] = useState<FilterState>({
     regdateStart: '',
     regdateEnd: '',
@@ -60,6 +61,11 @@ export function JobsScreen({ notificationAction, onNotificationActionHandled }: 
   const [highlightedJobId, setHighlightedJobId] = useState<number | null>(null)
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null)
   const jobRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+
+  // Hydration 에러 방지: 클라이언트에서만 렌더링
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const categories = ['전체', '정부 지원금 공고', '교사 채용 공고']
 
@@ -316,73 +322,86 @@ export function JobsScreen({ notificationAction, onNotificationActionHandled }: 
           )}
           
           {/* 정렬 Popover */}
-          <Popover open={isSortOpen} onOpenChange={setIsSortOpen}>
-            <PopoverTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8"
-                title="정렬"
-              >
-                <ArrowDownUp className="h-5 w-5" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-48 p-2" align="end">
-              <div className="space-y-1">
-                <Button
-                  variant={sortBy === 'new' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    setSortBy('new')
-                    setIsSortOpen(false)
-                  }}
+          {mounted ? (
+            <Popover open={isSortOpen} onOpenChange={setIsSortOpen}>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  title="정렬"
                 >
-                  신규순
+                  <ArrowDownUp className="h-5 w-5" />
                 </Button>
-                <Button
-                  variant={sortBy === 'popular' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    setSortBy('popular')
-                    setIsSortOpen(false)
-                  }}
-                >
-                  인기순
-                </Button>
-                <Button
-                  variant={sortBy === 'deadline' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    setSortBy('deadline')
-                    setIsSortOpen(false)
-                  }}
-                >
-                  마감임박
-                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2" align="end">
+                <div className="space-y-1">
+                  <Button
+                    variant={sortBy === 'new' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      setSortBy('new')
+                      setIsSortOpen(false)
+                    }}
+                  >
+                    신규순
+                  </Button>
+                  <Button
+                    variant={sortBy === 'popular' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      setSortBy('popular')
+                      setIsSortOpen(false)
+                    }}
+                  >
+                    인기순
+                  </Button>
+                  <Button
+                    variant={sortBy === 'deadline' ? 'default' : 'ghost'}
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      setSortBy('deadline')
+                      setIsSortOpen(false)
+                    }}
+                  >
+                    마감임박
+                  </Button>
               </div>
             </PopoverContent>
           </Popover>
+          ) : (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8"
+              title="정렬"
+              disabled
+            >
+              <ArrowDownUp className="h-5 w-5" />
+            </Button>
+          )}
 
           {/* 필터 Dialog */}
-          <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 relative"
-                title="고급 필터"
-              >
-                <SlidersHorizontal className="h-5 w-5" />
-                {activeFilterCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-                    {activeFilterCount}
-                  </span>
-                )}
-              </Button>
-            </DialogTrigger>
+          {mounted ? (
+            <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 relative"
+                  title="고급 필터"
+                >
+                  <SlidersHorizontal className="h-5 w-5" />
+                  {activeFilterCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>필터</DialogTitle>
@@ -485,8 +504,24 @@ export function JobsScreen({ notificationAction, onNotificationActionHandled }: 
                 적용 ({activeFilterCount})
               </Button>
             </DialogFooter>
-          </DialogContent>
-          </Dialog>
+            </DialogContent>
+            </Dialog>
+          ) : (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 relative"
+              title="고급 필터"
+              disabled
+            >
+              <SlidersHorizontal className="h-5 w-5" />
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              )}
+            </Button>
+          )}
         </div>
       </div>
 

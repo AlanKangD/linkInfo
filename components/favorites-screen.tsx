@@ -1,16 +1,24 @@
 'use client'
 
-import { useState } from 'react'
-import { FileX } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { JobCard } from '@/components/job-card'
+import { JobCard, TeacherJob } from '@/components/job-card'
 import { ProductCard } from '@/components/product-card'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { FileX } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 type FavoriteTab = 'jobs' | 'products'
 
 export function FavoritesScreen() {
   const [activeTab, setActiveTab] = useState<FavoriteTab>('jobs')
+  const [favoriteJobs, setFavoriteJobs] = useState<TeacherJob[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // TODO: 실제 즐겨찾기 API에서 데이터 가져오기
+    // 현재는 빈 배열로 설정 (데이터가 없을 때 빈 상태 표시)
+    setFavoriteJobs([])
+    setLoading(false)
+  }, [])
   
   return (
     <main className="px-4 py-6 space-y-6">
@@ -51,33 +59,32 @@ export function FavoritesScreen() {
 
       {/* Content */}
       {activeTab === 'jobs' ? (
-        <div className="space-y-3">
-          <JobCard 
-            title="시니어 프론트엔드 개발자"
-            company="네이버"
-            location="판교"
-            experience="경력 5년 이상"
-            salary="6000-8000만원"
-            tags={['React', 'TypeScript', 'Next.js']}
-            views={1234}
-            likes={234}
-            deadline="D-3"
-            isFavorited={true}
-          />
-          
-          <JobCard 
-            title="백엔드 개발자"
-            company="카카오"
-            location="판교"
-            experience="경력 3년 이상"
-            salary="5000-7000만원"
-            tags={['Node.js', 'Python', 'AWS']}
-            views={890}
-            likes={156}
-            deadline="D-7"
-            isFavorited={true}
-          />
-        </div>
+        loading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-muted-foreground">로딩 중...</p>
+          </div>
+        ) : favoriteJobs.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+            <FileX className="h-16 w-16 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">즐겨찾기한 공고가 없습니다</h3>
+            <p className="text-muted-foreground mb-6">관심있는 공고를 즐겨찾기에 추가해보세요</p>
+            <Button>공고 둘러보기</Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {favoriteJobs.map((job) => (
+              <JobCard 
+                key={job.id}
+                job={job}
+                isFavorited={true}
+                onFavoriteToggle={(jobId) => {
+                  // TODO: 즐겨찾기 해제 API 호출
+                  setFavoriteJobs(prev => prev.filter(j => j.id !== jobId))
+                }}
+              />
+            ))}
+          </div>
+        )
       ) : (
         <div className="grid grid-cols-2 gap-3">
           <ProductCard 

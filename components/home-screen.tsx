@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { getNavigationAction } from '@/lib/notification-navigation'
-import { Briefcase, Search, Sparkles, TrendingUp, User } from 'lucide-react'
+import { Search, Sparkles, TrendingUp, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type Tab = 'home' | 'jobs' | 'products' | 'favorites' | 'notifications'
@@ -84,8 +84,13 @@ export function HomeScreen() {
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Briefcase className="h-5 w-5 text-primary-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center overflow-hidden border border-gray-200">
+              <img 
+                src="/logo.png" 
+                alt="공고공구 로고" 
+                className="h-full w-full object-contain bg-white"
+                style={{ backgroundColor: '#ffffff' }}
+              />
             </div>
             <span className="font-semibold text-lg">공고공구</span>
           </div>
